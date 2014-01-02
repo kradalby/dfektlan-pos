@@ -1,10 +1,54 @@
-<h2>Hello {{world}}</h2>
+<!-- Sidebar -->
+<div id="sidebar-wrapper" >
+<div class="col-md-6">
+    <button class="btn btn-primary">
+        Store
+    </button>
+    <button class="btn btn-primary">
+        Stats
+    </button>
+</div>
+<div class="col-md-6">
 
-1 + 1 = {{1 + 1 }}
-<p>{{derp}}</p>
+  <ul class="sidebar-nav">
+    <li class="sidebar-brand"><a href="#">Ordre</a></li>
+    <li ng-repeat="c in cart track by $index">{{ c.name }}<span ng-click="removeFromCart($index)" class="glyphicon glyphicon-remove"></span></li>
+  </ul>
+</div>
+</div>
 
-<ul>
-<li ng-repeat="item in items">
-    {{ item.name }}
-</li>
-</ul>
+<!-- Page content -->
+<div id="page-content-wrapper">
+  <div class="content-header">
+    <h1>
+      <a id="menu-toggle" href="#" class="btn btn-default"><i class="icon-reorder"></i></a>
+      dfekt LAN POS
+    </h1>
+  </div>
+  <!-- Keep all page content within the page-content inset div! -->
+  <div class="page-content inset">
+    <div class="row">
+      <div class="col-md-12">
+          <div >
+              Search: <input ng-model="searchText"> 
+              <button id="alt" class="btn btn-primary">Alt</button>
+              <button id="drikke" class="btn btn-primary">Drikke</button>
+              <button id="mat" class="btn btn-primary">Mat</button>
+              <button id="annet" class="btn btn-primary">Annet</button>
+          </div>
+          <hr>
+          <div ng-repeat="item in items | filter:searchText" class="col-xs-6 col-sm-3" id="{{ item.group }}">
+              <div class="panel panel-primary" ng-click="addToCart(item)">
+                  <div class="panel-heading">
+                      <h3 class="panel-title">{{ item.name }}</h3>
+                  </div>
+                  <div class="panel-body">
+                      {{ item.price }} kroner
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
