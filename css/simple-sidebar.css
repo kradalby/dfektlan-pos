@@ -85,6 +85,15 @@
   padding: 20px;
 }
 
+#order-item {
+  color: #f1f1f1;
+}
+
+#order-total {
+  color: #f1f1f1;
+  font-size: 15px;
+}
+
 @media (max-width:767px) {
 
 #wrapper {
@@ -115,3 +124,5 @@
 }
 
 }
+
+

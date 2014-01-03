@@ -8,6 +8,24 @@ var posApp  = angular.module("posApp", [
     'posServices'
 ]);
 
+  /* CORS... */
+  /* http://stackoverflow.com/questions/17289195/angularjs-post-data-to-external-rest-api */
+posApp.config(function($httpProvider) {
+    //Enable cross domain calls
+    //$httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+    $httpProvider.defaults.headers.patch = {
+        'Content-Type': 'application/json;charset=utf-8'
+    };
+    $httpProvider.defaults.headers.post = {
+        "Content-Type": "application/json;charset=utf-8"
+    };
+
+    //Remove the header containing XMLHttpRequest used to identify ajax call 
+    //that would prevent CORS from working
+});
+
 // setter opp routes til applikasjonen. controller er optional
 posApp.config(['$routeProvider',
     function($routeProvider) {
@@ -25,7 +43,3 @@ posApp.config(['$routeProvider',
         });
     }]);
 
-//posApp.config(['$httpProvider', function ($httpProvider) {
-//            $httpProvider.defaults.useXDomain = true;
-//            delete $httpProvider.defaults.headers.common['X-Requested-With'];
-//        }]);
