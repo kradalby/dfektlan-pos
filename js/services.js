@@ -30,7 +30,7 @@ var tastypieDataTransformSingle = function ($http) {
 
 posServices.factory('Item', ['$resource', '$http',
   function($resource, $http){
-    return $resource(APIURL + 'item/?username=' + APIUSER + '&api_key=' + APIKEY + '&format=jsonp' + '&limit=0', {}, {
+    return $resource(APIURL + 'item/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
         query: {
             method:'JSONP', 
             params:{callback: 'JSON_CALLBACK', format: 'jsonp'}, 
@@ -43,25 +43,18 @@ posServices.factory('Item', ['$resource', '$http',
 
 posServices.factory('Order', ['$resource', '$http',
   function($resource, $http){
-    return $resource(APIURL + 'order/?username=' + APIUSER + '&api_key=' + APIKEY + '&format=jsonp' + '&limit=0', {}, {
-        query: {
-            method:'JSONP', 
-            params:{callback: 'JSON_CALLBACK', format: 'jsonp'}, 
-            transformResponse: tastypieDataTransformer($http),
-            isArray: true
-        }
-    });
-  }
-]);
-
-posServices.factory('Order', ['$resource', '$http',
-  function($resource, $http){
-    return $resource(APIURL + 'order/?username=' + APIUSER + '&api_key=' + APIKEY + '' + '&limit=0', {}, {
+    return $resource(APIURL + 'order/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
         create: {
             method:'POST', 
             params:{}, 
             transformResponse: tastypieDataTransformSingle($http),
             //isArray: true
+        },
+        query: {
+            method:'JSONP', 
+            params:{callback: 'JSON_CALLBACK', format: 'jsonp'}, 
+            transformResponse: tastypieDataTransformer($http),
+            isArray: true
         }
     });
   }

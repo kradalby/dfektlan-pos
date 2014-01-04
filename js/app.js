@@ -34,10 +34,10 @@ posApp.config(['$routeProvider',
             templateUrl: "pages/main.html",
             controller: "mainController"
         }).
-//        when('/stats', {
-//            templateUrl: "/pages/stats.html",
-//            controller: 'statsController'
-//        }).
+        when('/stats', {
+            templateUrl: "/pages/stats.html",
+            controller: 'statsController'
+        }).
         otherwise({
             redirectTo: '/'
         });

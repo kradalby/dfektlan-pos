@@ -1,25 +1,30 @@
 <!-- Sidebar -->
 <div id="sidebar-wrapper" >
 <div class="row">
-    <div class="col-md-1">
-        <button class="btn btn-primary">
-            Store
-        </button>
-        <button class="btn btn-primary">
-            Stats
-        </button>
-    </div>
-    <div class="col-md-1">
+
+      <div class="col-md-6">
+          <a class="btn btn-primary" href="#main">
+              Store
+          </a>
+          <a class="btn btn-primary" href="#stats">
+              Stats
+          </a>
+      </div>
+    <div class="col-md-6">
 
       <ul class="sidebar-nav">
         <li class="sidebar-brand"><a href="#">Ordre</a></li>
         <li id="order-item" ng-repeat="c in cart track by $index">{{ c.name }}<span ng-click="removeFromCart($index)" class="glyphicon glyphicon-remove"></span></li>
         <hr>
         <li id="order-total">Total: {{ totalSum }} kroner</li>
+        <div>
         <button ng-class="{ 'active' : paymentMethod == 'kontant' }"  class="btn btn-primary" ng-click="setPaymentMethod('kontant')">Kontant</button>
         <button ng-class="{ 'active' : paymentMethod == 'kort' }" class="btn btn-primary" ng-click="setPaymentMethod('kort')">Kort</button>
         <button ng-class="{ 'active' : paymentMethod == 'crew' }"  class="btn btn-primary" ng-click="setPaymentMethod('crew')">Crew</button>
+        </div>
+        <div>
         <button class="btn btn-primary" ng-click="submitOrder()">Legg inn ordre</button>
+        </div>
       </ul>
     </div>
 <!--    

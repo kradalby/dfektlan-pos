@@ -1,1 +1,62 @@
-<h2>Login</h2>
+<!-- Sidebar -->
+<div id="sidebar-wrapper" >
+<div class="row">
+
+      <div class="col-md-6">
+          <a class="btn btn-primary" href="#main">
+              Store
+          </a>
+          <a class="btn btn-primary" href="#stats">
+              Stats
+          </a>
+      </div>
+    <div class="col-md-6">
+
+      <ul class="sidebar-nav">
+        <li class="sidebar-brand"><a href="#">Stats</a></li>
+      </ul>
+    </div>
+<!--    
+    <div class="col-md-1">
+    </div>
+-->    
+</div>
+</div>
+
+<!-- Page content -->
+<div id="page-content-wrapper">
+  <div class="content-header">
+    <h1>
+      <a id="menu-toggle" href="#" class="btn btn-default"><i class="icon-reorder"></i></a>
+      dfekt LAN POS
+    </h1>
+  </div>
+  <!-- Keep all page content within the page-content inset div! -->
+  <div class="page-content inset">
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table">
+            <tr>
+                <th>Betalingsmetode</th>
+                <th>Total omsettning</th>
+            </tr>
+            <tr>
+                <td>Kontant</td>
+                <td>{{ totCash }} kroner</td>
+            </tr>
+            <tr>
+                <td>Kort</td>
+                <td>{{ totCard }} kroner</td>
+            </tr>
+            <tr>
+                <td>Crew</td>
+                <td>{{ totCrew }} kroner</td>
+            </tr>
+        </table> 
+        <button class="btn btn-primary" ng-click="calculateTotals(orders)">
+        Oppdater
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
