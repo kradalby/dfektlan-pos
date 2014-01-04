@@ -18,7 +18,17 @@ Array.prototype.clear = function() {
   }
 };
 
-posControllers.controller('mainController', ['$scope', 'Item', 'Order',
+function dir(object) {
+    var stuff = [];
+    for (var s in object) {
+        stuff.push(s);
+    }
+    stuff.sort();
+    return stuff;
+}
+
+
+posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQuantity',
   function($scope, Item, Order, ItemQuantity) {
     $scope.items = Item.query();
 
@@ -49,14 +59,14 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order',
 
     
     
-    /* Methos related to the order functionality */
+    /* Methods related to the order functionality */
     $scope.paymentMethod = "";
 
     $scope.setPaymentMethod = function(method) {
         $scope.paymentMethod = method;
     };
 
-    $scope.generateItemQuantity = function(cart, orderId) {
+    function generateItemQuantity(cart, orderId) {
         var items = {};
 
         for (var i = 0; i < cart.length; i++) {
@@ -67,10 +77,11 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order',
             }
         }
 
-        var jsonPost = '{objects: [ ';
+        var jsonPost = '{"objects": [ ';
         for (var item in items) {
-            jsonPost += '{ "item": "' + item + '", "order": "' + orderId + '", "quantity": ' + items[item] + '}, ';
+            jsonPost += '{ "item": "' + item + '", "order": "' + orderId + '", "quantity": ' + items[item] + '},';
         }
+        jsonPost = jsonPost.substring(0, jsonPost.length - 1);
         jsonPost += ']}';
 
 
@@ -87,12 +98,21 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order',
             alert("Det er ikke valgt noen betalingsmetode!");
         } else 
         {
-            var orderId = Order.create('{"paymentMethod":"' + $scope.paymentMethod + '"}');
-            console.log(orderId);
-            //$scope.setPaymentMethod('');
-            //var jsonData = $scope.generateItemQuanitiy($scope.cart, orderId);
-            //ItemQuantity.addItems(jsonData);
-            //$scope.cart.clear();
+            Order.create('{"paymentMethod":"' + $scope.paymentMethod + '"}').$promise.then(function(data) {
+                var order = data;
+                var orderId = order.resource_uri
+                console.log(orderId);
+                $scope.setPaymentMethod('');
+                console.log($scope.cart);
+                var jsonData = generateItemQuantity($scope.cart, orderId);
+                console.log(jsonData);
+                ItemQuantity.addItems(jsonData);
+                $scope.cart.clear();
+                
+            }, function(error) {
+                console.log(error);
+            });
+
         }
     };
 

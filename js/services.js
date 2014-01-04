@@ -22,7 +22,7 @@ var tastypieDataTransformSingle = function ($http) {
     return $http.defaults.transformResponse.concat([
         function (data, headersGetter) {
             var result = data;
-            console.log(result);
+            console.log(result.id);
             return result;
         }
     ])
@@ -61,7 +61,7 @@ posServices.factory('Order', ['$resource', '$http',
             method:'POST', 
             params:{}, 
             transformResponse: tastypieDataTransformSingle($http),
-            isArray: true
+            //isArray: true
         }
     });
   }
