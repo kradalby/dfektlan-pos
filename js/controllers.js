@@ -66,7 +66,7 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
         $scope.paymentMethod = method;
     };
 
-    function generateItemQuantity(cart, orderId) {
+    $scope.generateItemQuantity = function(cart, orderId) {
         var items = {};
 
         for (var i = 0; i < cart.length; i++) {
@@ -104,10 +104,11 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
                 console.log(orderId);
                 $scope.setPaymentMethod('');
                 console.log($scope.cart);
-                var jsonData = generateItemQuantity($scope.cart, orderId);
+                var jsonData = $scope.generateItemQuantity($scope.cart, orderId);
                 console.log(jsonData);
                 ItemQuantity.addItems(jsonData);
                 $scope.cart.clear();
+                $scope.totalSum = $scope.calculateTotalSum($scope.cart);
                 
             }, function(error) {
                 console.log(error);
