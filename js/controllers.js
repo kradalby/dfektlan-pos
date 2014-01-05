@@ -31,7 +31,6 @@ function dir(object) {
 posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQuantity', 'CrewMember',
   function($scope, Item, Order, ItemQuantity, CrewMember) {
     $scope.items = Item.query();
-    $scope.crewMembers = CrewMember.query();
 
     
     /* Methods releated to the cart functionality */
@@ -58,30 +57,89 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
     };
 
     /* Methods related to Crew order functionality */
+    $scope.crewMembers = CrewMember.query();
+
+    $scope.updateCrewMemberData = function() {
+        $scope.crewMembers = CrewMember.query();
+    }
+    
+    $scope.isCrew = function(crewMembers, rfid) {
+        for (var i = 0; i < crewMembers.length; i++) {
+            if (crewMembers[i].user.rfid == rfid) {
+                return true;
+            }
+        }    
+        return false;
+    }
+    
+    $scope.getCrewMemberCredit = function(crewMembers, rfid) {
+        for (var i = 0; i < crewMembers.length; i++) {
+            if (crewMembers[i].user.rfid == rfid) {
+                return crewMembers[i].credit;
+            }
+        }
+        return 0;
+        
+    }
+
+    //This is not a good way to solve problem with outdated data
+    $scope.setCrewMemberCredit = function(crewMembers, rfid, credit) {
+        for (var i = 0; i < crewMembers.length; i++) {
+            if (crewMembers[i].user.rfid == rfid) {
+                crewMembers[i].credit = credit;
+            }
+        }
+        
+    }
+
+    $scope.getCrewMemberId = function(crewMembers, rfid) {
+        for (var i = 0; i < crewMembers.length; i++) {
+            if (crewMembers[i].user.rfid == rfid) {
+                return crewMembers[i].id;
+            }
+        }    
+        return undefined;
+    }
+
+    $scope.hasSufficientFunds = function(credit, sum) {
+        if (credit >= sum) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
     $scope.handleCrewOrder = function(crewMembers, sum) {
         var rfid = prompt("Scan RFID kort");
         var id = "";
         var credit = 0;
-        console.log(crewMembers, sum);
-        // NEED CHECK IF MEMBER IS CREWH
-        for (var i = 0; i < crewMembers.length; i++) {
-            console.log(crewMembers[i].user.rfid);
-            if (crewMembers[i].user.rfid == rfid) {
-                id = crewMembers[i].id;
-                credit = crewMembers[i].credit;
-                break;
-            }
-        }
         
-        // THIS WILL NOT CANCEL THE ORDER, FIX THIS
-        if (credit >= sum) {
-            credit -= sum;
-            CrewMember.patchUser({userId: id},'{"credit": ' + credit +'}');
-        } else {
-            alert("Det er ikke nok kreditt på denne kontoen");
-        }
 
+        if ($scope.isCrew(crewMembers, rfid)) {
+            credit = $scope.getCrewMemberCredit(crewMembers, rfid);
+            id = $scope.getCrewMemberId(crewMembers, rfid);
+            
+            if ($scope.hasSufficientFunds(credit, sum)) {
+                console.log(credit, sum);
+                credit -= sum;
+                console.log(credit);
+                CrewMember.patchUser({userId: id},'{"credit": ' + credit +'}');
+                $scope.setCrewMemberCredit(crewMembers, rfid, credit);
+                
+            } else {
+                alert('Ikke nok kredit');
+                return false;
+            }
+
+        } else {
+            alert('Personen er ikke Crew');
+            return false;
+        }
+        //This does not seem to work
+        $scope.updateCrewMemberData();
+        return true;
     }
     
     /* Methods related to the order functionality */
@@ -129,7 +187,9 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
                 var orderId = order.resource_uri
                 
                 if ($scope.paymentMethod === "crew") {
-                    $scope.handleCrewOrder($scope.crewMembers, $scope.totalSum)
+                    if (!$scope.handleCrewOrder($scope.crewMembers, $scope.totalSum)) {
+                        return false
+                    }
                 }
 
                 console.log(orderId);
