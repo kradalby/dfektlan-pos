@@ -74,27 +74,33 @@ posServices.factory('ItemQuantity', ['$resource', '$http',
 ]);
 
 
-posServices.factory('CrewMember', ['$resource', '$http',
-  function($resource, $http){
-    return $resource(APIURL + 'crewmember/:id/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
-        patchUser: {
-            method:'PATCH', 
-            params:{id:'@id'}, 
-            //transformResponse: tastypieDataTransformer($http),
-            isArray: true
-        }
-    });
-  }
-]);
+//posServices.factory('CrewMember', ['$resource', '$http',
+//  function($resource, $http){
+//    return $resource(APIURL + 'crewmember/:userId/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
+//        patchUser: {
+//            method:'PATCH', 
+//            params:{userId:'@userId'}, 
+//            //transformResponse: tastypieDataTransformer($http),
+//            isArray: true
+//        }
+//    });
+//  }
+//]);
 
 
 posServices.factory('CrewMember', ['$resource', '$http',
   function($resource, $http){
-    return $resource(APIURL + 'crewmember/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
+    return $resource(APIURL + 'crewmember/:userId/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0' + '&format=json', {}, {
         query: {
             method:'GET', 
             params:{}, 
             transformResponse: tastypieDataTransformer($http),
+            isArray: true
+        },
+        patchUser: {
+            method:'PATCH', 
+            params:{userId:'@userId'}, 
+            //transformResponse: tastypieDataTransformer($http),
             isArray: true
         }
     });

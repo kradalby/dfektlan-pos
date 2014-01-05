@@ -57,7 +57,32 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
         return sum;
     };
 
-    
+    /* Methods related to Crew order functionality */
+
+    $scope.handleCrewOrder = function(crewMembers, sum) {
+        var rfid = prompt("Scan RFID kort");
+        var id = "";
+        var credit = 0;
+        console.log(crewMembers, sum);
+        // NEED CHECK IF MEMBER IS CREWH
+        for (var i = 0; i < crewMembers.length; i++) {
+            console.log(crewMembers[i].user.rfid);
+            if (crewMembers[i].user.rfid == rfid) {
+                id = crewMembers[i].id;
+                credit = crewMembers[i].credit;
+                break;
+            }
+        }
+        
+        // THIS WILL NOT CANCEL THE ORDER, FIX THIS
+        if (credit >= sum) {
+            credit -= sum;
+            CrewMember.patchUser({userId: id},'{"credit": ' + credit +'}');
+        } else {
+            alert("Det er ikke nok kreditt på denne kontoen");
+        }
+
+    }
     
     /* Methods related to the order functionality */
     $scope.paymentMethod = "";
@@ -89,27 +114,6 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
 
     }
 
-    $scope.handleCrewOrder = function(crewMembers, sum) {
-        var rfid = prompt("Scan RFID kort");
-        var id = "";
-        var credit = 0;
-        for (var i = 0; i < crewMembers.length; i++) {
-            if (crewMembers[i].user.rfid == rfid) {
-                id = crewMembers[i].id;
-                credit = crewMembers[i].credit;
-                break;
-            }
-        }
-        
-        // THIS WILL NOT CANCEL THE ORDER, FIX THIS
-        if (credit >= sum) {
-            credit -= sum;
-            CrewMember.patchUser({userId:id}, '{"credit": ' + credit +'}');
-        } else {
-            alert("Det er ikke nok kreditt på denne kontoen");
-        }
-
-    }
 
     $scope.submitOrder = function() {
         if ($scope.cart.length == 0)
