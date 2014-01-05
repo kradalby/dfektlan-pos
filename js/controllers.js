@@ -57,11 +57,11 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
     };
 
     /* Methods related to Crew order functionality */
-    $scope.crewMembers = CrewMember.query();
 
-    $scope.updateCrewMemberData = function() {
-        $scope.crewMembers = CrewMember.query();
-    }
+    //$scope.updateCrewMemberData = function() {
+    //    $scope.crewMembers = CrewMember.query();
+    //    console.log("Updated crew");
+    //}
     
     $scope.isCrew = function(crewMembers, rfid) {
         for (var i = 0; i < crewMembers.length; i++) {
@@ -79,16 +79,6 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
             }
         }
         return 0;
-        
-    }
-
-    //This is not a good way to solve problem with outdated data
-    $scope.setCrewMemberCredit = function(crewMembers, rfid, credit) {
-        for (var i = 0; i < crewMembers.length; i++) {
-            if (crewMembers[i].user.rfid == rfid) {
-                crewMembers[i].credit = credit;
-            }
-        }
         
     }
 
@@ -111,34 +101,40 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
 
 
 
-    $scope.handleCrewOrder = function(crewMembers, sum) {
-        var rfid = prompt("Scan RFID kort");
-        var id = "";
-        var credit = 0;
-        
-
-        if ($scope.isCrew(crewMembers, rfid)) {
-            credit = $scope.getCrewMemberCredit(crewMembers, rfid);
-            id = $scope.getCrewMemberId(crewMembers, rfid);
+    $scope.handleCrewOrder = function(sum) {
+        CrewMember.query().$promise.then(
+        function(data) {
+            var crewMembers = data;
+            var rfid = prompt("Scan RFID kort");
+            var id = "";
+            var credit = 0;
             
-            if ($scope.hasSufficientFunds(credit, sum)) {
-                console.log(credit, sum);
-                credit -= sum;
-                console.log(credit);
-                CrewMember.patchUser({userId: id},'{"credit": ' + credit +'}');
-                $scope.setCrewMemberCredit(crewMembers, rfid, credit);
+
+            if ($scope.isCrew(crewMembers, rfid)) {
+                credit = $scope.getCrewMemberCredit(crewMembers, rfid);
+                id = $scope.getCrewMemberId(crewMembers, rfid);
                 
+                if ($scope.hasSufficientFunds(credit, sum)) {
+                    console.log(credit, sum);
+                    credit -= sum;
+                    console.log(credit);
+                    CrewMember.patchUser({userId: id},'{"credit": ' + credit +'}');
+                    
+                } else {
+                    alert('Ikke nok kredit');
+                    return false;
+                }
+
             } else {
-                alert('Ikke nok kredit');
+                alert('Personen er ikke Crew');
                 return false;
             }
-
-        } else {
-            alert('Personen er ikke Crew');
+            return true;
+        },
+        function(error) {
+            console.log("error");
             return false;
-        }
-        //This does not seem to work
-        $scope.updateCrewMemberData();
+        });
         return true;
     }
     
@@ -187,7 +183,7 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
                 var orderId = order.resource_uri
                 
                 if ($scope.paymentMethod === "crew") {
-                    if (!$scope.handleCrewOrder($scope.crewMembers, $scope.totalSum)) {
+                    if (!$scope.handleCrewOrder($scope.totalSum)) {
                         return false
                     }
                 }
