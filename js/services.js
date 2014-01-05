@@ -3,7 +3,7 @@
 /* Services */
 
 var posServices = angular.module('posServices', ['ngResource']);
-var APIURL = "http://localhost:8080/pos/api/v1/";
+var APIURL = "http://localhost:8080/api/v1/";
 var APIUSER = "kradalby";
 var APIKEY = "daa3d71d9fae3cf16e627f19ad091a73c5586e37";
 
@@ -62,11 +62,39 @@ posServices.factory('Order', ['$resource', '$http',
 
 posServices.factory('ItemQuantity', ['$resource', '$http',
   function($resource, $http){
-    return $resource(APIURL + 'itemquantity/?username=' + APIUSER + '&api_key=' + APIKEY + '&format=jsonp' + '&limit=0', {}, {
+    return $resource(APIURL + 'itemquantity/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
         addItems: {
             method:'PATCH', 
             params:{}, 
             //transformResponse: tastypieDataTransformer($http),
+            isArray: true
+        }
+    });
+  }
+]);
+
+
+posServices.factory('CrewMember', ['$resource', '$http',
+  function($resource, $http){
+    return $resource(APIURL + 'crewmember/:id/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
+        patchUser: {
+            method:'PATCH', 
+            params:{id:'@id'}, 
+            //transformResponse: tastypieDataTransformer($http),
+            isArray: true
+        }
+    });
+  }
+]);
+
+
+posServices.factory('CrewMember', ['$resource', '$http',
+  function($resource, $http){
+    return $resource(APIURL + 'crewmember/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
+        query: {
+            method:'GET', 
+            params:{}, 
+            transformResponse: tastypieDataTransformer($http),
             isArray: true
         }
     });

@@ -28,10 +28,10 @@ function dir(object) {
 }
 
 
-posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQuantity',
-  function($scope, Item, Order, ItemQuantity) {
+posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQuantity', 'CrewMember',
+  function($scope, Item, Order, ItemQuantity, CrewMember) {
     $scope.items = Item.query();
-
+    $scope.crewMembers = CrewMember.query();
 
     
     /* Methods releated to the cart functionality */
@@ -89,6 +89,28 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
 
     }
 
+    $scope.handleCrewOrder = function(crewMembers, sum) {
+        var rfid = prompt("Scan RFID kort");
+        var id = "";
+        var credit = 0;
+        for (var i = 0; i < crewMembers.length; i++) {
+            if (crewMembers[i].user.rfid == rfid) {
+                id = crewMembers[i].id;
+                credit = crewMembers[i].credit;
+                break;
+            }
+        }
+        
+        // THIS WILL NOT CANCEL THE ORDER, FIX THIS
+        if (credit >= sum) {
+            credit -= sum;
+            CrewMember.patchUser({userId:id}, '{"credit": ' + credit +'}');
+        } else {
+            alert("Det er ikke nok kreditt på denne kontoen");
+        }
+
+    }
+
     $scope.submitOrder = function() {
         if ($scope.cart.length == 0)
         {
@@ -101,6 +123,11 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
             Order.create('{"paymentMethod":"' + $scope.paymentMethod + '"}').$promise.then(function(data) {
                 var order = data;
                 var orderId = order.resource_uri
+                
+                if ($scope.paymentMethod === "crew") {
+                    $scope.handleCrewOrder($scope.crewMembers, $scope.totalSum)
+                }
+
                 console.log(orderId);
                 $scope.setPaymentMethod('');
                 console.log($scope.cart);
