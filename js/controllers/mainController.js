@@ -73,7 +73,7 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
     }
 
 
-
+    
     $scope.handleCrewOrder = function(sum) {
         CrewMember.query().$promise.then(
         function(data) {
@@ -108,7 +108,6 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
             console.log("error");
             return false;
         });
-        return true;
     }
     
     /* Methods related to the order functionality */
@@ -155,8 +154,13 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
                 var order = data;
                 var orderId = order.resource_uri
                 
+                // THERE IS A BUG HERE!
                 if ($scope.paymentMethod === "crew") {
-                    if (!$scope.handleCrewOrder($scope.totalSum)) {
+                    if (!($scope.handleCrewOrder($scope.totalSum))) {
+                        //$scope.setPaymentMethod('');
+                        //$scope.cart.clear();
+                        //$scope.totalSum = $scope.calculateTotalSum($scope.cart);
+                        console.log("herp");
                         return false
                     }
                 }
