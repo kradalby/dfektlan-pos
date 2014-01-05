@@ -31,11 +31,11 @@ posApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
         when('/', {
-            templateUrl: "pages/main.html",
+            templateUrl: "partials/main.html",
             controller: "mainController"
         }).
         when('/stats', {
-            templateUrl: "/pages/stats.html",
+            templateUrl: "/partials/stats.html",
             controller: 'statsController'
         }).
         otherwise({

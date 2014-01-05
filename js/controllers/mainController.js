@@ -1,32 +1,5 @@
 'use strict';
 
-/* Controllers */
-
-var posControllers = angular.module('posControllers', []);
-
-
-/* Proper remove function for arrays */
-Array.prototype.remove = function(from, to) {
-  var rest = this.slice((to || from) + 1 || this.length);
-  this.length = from < 0 ? this.length + from : from;
-  return this.push.apply(this, rest);
-};
-
-Array.prototype.clear = function() {
-  while (this.length > 0) {
-    this.pop();
-  }
-};
-
-function dir(object) {
-    var stuff = [];
-    for (var s in object) {
-        stuff.push(s);
-    }
-    stuff.sort();
-    return stuff;
-}
-
 
 posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQuantity', 'CrewMember',
   function($scope, Item, Order, ItemQuantity, CrewMember) {
@@ -208,41 +181,3 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
   }]);
 
 
-posControllers.controller('statsController', ['$scope', 'Order',
-  function($scope, Order) {
-
-    $scope.orders = Order.query();
-    
-    $scope.totCash = 0;
-    $scope.totCard = 0;
-    $scope.totCrew = 0;
-
-    $scope.calculateTotals = function(orders) {
-        var cash = 0;
-        var card = 0;
-        var crew = 0;
-
-        for (var i = 0; i < orders.length; i++) {
-            if (orders[i].paymentMethod === "kontant") {
-                for (var j = 0; j < orders[i].items.length; j++) {
-                    var item = orders[i].items[j];
-                    cash += item.item.price * item.quantity;
-                }
-            } else if (orders[i].paymentMethod === "kort") {
-                for (var j = 0; j < orders[i].items.length; j++) {
-                    var item = orders[i].items[j];
-                    card += item.item.price * item.quantity;
-                }
-            } else if (orders[i].paymentMethod === "crew") {
-                for (var j = 0; j < orders[i].items.length; j++) {
-                    var item = orders[i].items[j];
-                    crew += item.item.price * item.quantity;
-                }
-            }
-        }
-        $scope.totCash = cash;
-        $scope.totCard = card;
-        $scope.totCrew = crew;
-
-    }
-  }]);
