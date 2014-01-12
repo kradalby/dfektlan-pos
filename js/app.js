@@ -35,7 +35,7 @@ posApp.config(['$routeProvider',
             controller: "mainController"
         }).
         when('/stats', {
-            templateUrl: "/partials/stats.html",
+            templateUrl: "partials/stats.html",
             controller: 'statsController'
         }).
         otherwise({
