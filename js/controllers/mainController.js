@@ -119,18 +119,21 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
 
     $scope.generateItemQuantity = function(cart, orderId) {
         var items = {};
+        var totalCost = 0;
 
         for (var i = 0; i < cart.length; i++) {
             if (!items.hasOwnProperty(cart[i].resource_uri)) {
                 items[cart[i].resource_uri] = 1;
+                totalCost += cart[i].price;
             } else {
                 items[cart[i].resource_uri] += 1;
+                totalCost += cart[i].price;
             }
         }
 
         var jsonPost = '{"objects": [ ';
         for (var item in items) {
-            jsonPost += '{ "item": "' + item + '", "order": "' + orderId + '", "quantity": ' + items[item] + '},';
+            jsonPost += '{ "item": "' + item + '", "order": "' + orderId + '", "quantity": ' + items[item] + ', "totalPrice": ' + totalCost + '},';
         }
         jsonPost = jsonPost.substring(0, jsonPost.length - 1);
         jsonPost += ']}';
