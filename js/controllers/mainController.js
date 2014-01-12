@@ -134,6 +134,7 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
         var jsonPost = '{"objects": [ ';
         for (var item in items) {
             jsonPost += '{ "item": "' + item + '", "order": "' + orderId + '", "quantity": ' + items[item] + ', "totalPrice": ' + totalCost + '},';
+            console.log(jsonPost);
         }
         jsonPost = jsonPost.substring(0, jsonPost.length - 1);
         jsonPost += ']}';

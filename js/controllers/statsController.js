@@ -18,17 +18,17 @@ posControllers.controller('statsController', ['$scope', 'Order',
             if (orders[i].paymentMethod === "kontant") {
                 for (var j = 0; j < orders[i].items.length; j++) {
                     var item = orders[i].items[j];
-                    cash += items.item.price * item.quantity;
+                    cash += item.item.price * item.quantity;
                 }
             } else if (orders[i].paymentMethod === "kort") {
                 for (var j = 0; j < orders[i].items.length; j++) {
                     var item = orders[i].items[j];
-                    card += items.item.price * item.quantity;
+                    card += item.item.price * item.quantity;
                 }
             } else if (orders[i].paymentMethod === "crew") {
                 for (var j = 0; j < orders[i].items.length; j++) {
                     var item = orders[i].items[j];
-                    crew += items.item.price * item.quantity;
+                    crew += item.item.price * item.quantity;
                 }
             }
         }
