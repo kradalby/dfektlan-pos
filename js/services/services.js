@@ -71,18 +71,6 @@ posServices.factory('ItemQuantity', ['$resource', '$http',
 ]);
 
 
-//posServices.factory('CrewMember', ['$resource', '$http',
-//  function($resource, $http){
-//    return $resource(APIURL + 'crewmember/:userId/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
-//        patchUser: {
-//            method:'PATCH', 
-//            params:{userId:'@userId'}, 
-//            //transformResponse: tastypieDataTransformer($http),
-//            isArray: true
-//        }
-//    });
-//  }
-//]);
 
 
 posServices.factory('CrewMember', ['$resource', '$http',
@@ -98,6 +86,20 @@ posServices.factory('CrewMember', ['$resource', '$http',
             method:'PATCH', 
             params:{userId:'@userId'}, 
             //transformResponse: tastypieDataTransformer($http),
+            isArray: true
+        }
+    });
+  }
+]);
+
+
+posServices.factory('ItemGroup', ['$resource', '$http',
+  function($resource, $http){
+    return $resource(APIURL + 'itemgroup/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
+        query: {
+            method:'GET', 
+            params:{}, 
+            transformResponse: tastypieDataTransformer($http),
             isArray: true
         }
     });

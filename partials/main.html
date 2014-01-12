@@ -47,14 +47,11 @@
     <div class="row">
       <div class="col-md-12">
           <div >
-              Search: <input ng-model="searchText"> 
-              <button id="alt" class="btn btn-primary">Alt</button>
-              <button id="drikke" class="btn btn-primary">Drikke</button>
-              <button id="mat" class="btn btn-primary">Mat</button>
-              <button id="annet" class="btn btn-primary">Annet</button>
+              <button ng-class="{ 'active' : itemGroup == '' }" id="Alt" ng-click="setItemGroup('')" class="btn btn-primary">Alt</button>
+              <button ng-repeat="group in itemGroups" ng-class="{ 'active' : itemGroup == group.resource_uri }" id="{{ group.name }}" ng-click="setItemGroup(group.resource_uri)" class="btn btn-primary">{{ group.name }}</button>
           </div>
           <hr>
-          <div ng-repeat="item in items | filter:searchText" class="col-xs-6 col-sm-3" id="{{ item.group }}">
+          <div ng-repeat="item in items | filter:itemGroup" class="col-xs-6 col-sm-3" id="{{ item.group }}">
               <div class="panel panel-primary" ng-click="addToCart(item)">
                   <div class="panel-heading">
                       <h3 class="panel-title">{{ item.name }}</h3>

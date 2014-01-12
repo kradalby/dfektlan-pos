@@ -1,9 +1,16 @@
 'use strict';
 
 
-posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQuantity', 'CrewMember',
-  function($scope, Item, Order, ItemQuantity, CrewMember) {
+posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQuantity', 'CrewMember', 'ItemGroup',
+  function($scope, Item, Order, ItemQuantity, CrewMember, ItemGroup) {
     $scope.items = Item.query();
+    
+    /* Methods related to the group filter */
+    $scope.itemGroups = ItemGroup.query();
+    $scope.itemGroup = "";
+    $scope.setItemGroup = function(groupResource) {
+        $scope.itemGroup = groupResource;
+    }
 
     
     /* Methods releated to the cart functionality */
