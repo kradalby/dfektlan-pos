@@ -62,6 +62,16 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
         
     }
 
+    $scope.getCrewMemberName = function(crewMembers, rfid) {
+        for (var i = 0; i < crewMembers.length; i++) {
+            if (crewMembers[i].user.rfid == rfid) {
+                return crewMembers[i].user.first_name + " " + crewMembers[i].user.last_name;
+            }
+        }
+        return 0;
+        
+    }
+
     $scope.getCrewMemberId = function(crewMembers, rfid) {
         for (var i = 0; i < crewMembers.length; i++) {
             if (crewMembers[i].user.rfid == rfid) {
@@ -79,8 +89,9 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
         }
     }
 
+    $scope.lastCrewMemberCredit = 0;
+    $scope.lastCrewMemberName = "Crewmedlem";
 
-    var handleCrew = "";
     $scope.handleCrewOrder = function(sum) {
         CrewMember.query().$promise.then(
         function(data) {
@@ -100,6 +111,8 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
                     credit -= sum;
                     console.log(credit);
                     CrewMember.patchUser({userId: id},'{"credit": ' + credit +'}');
+                    $scope.lastCrewMemberCredit = credit;
+                    $scope.lastCrewMemberName = $scope.getCrewMemberName(crewMembers, rfid);
                     createOrder();
                     
                 } else {
