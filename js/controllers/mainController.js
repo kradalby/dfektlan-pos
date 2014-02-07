@@ -80,12 +80,13 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
     }
 
 
-    
+    var handleCrew = "";
     $scope.handleCrewOrder = function(sum) {
         CrewMember.query().$promise.then(
         function(data) {
             var crewMembers = data;
             var rfid = prompt("Scan RFID kort");
+            console.log(rfid);
             var id = "";
             var credit = 0;
             
@@ -99,21 +100,17 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
                     credit -= sum;
                     console.log(credit);
                     CrewMember.patchUser({userId: id},'{"credit": ' + credit +'}');
+                    createOrder();
                     
                 } else {
                     alert('Ikke nok kredit');
-                    return false;
                 }
-
             } else {
                 alert('Personen er ikke Crew');
-                return false;
             }
-            return true;
         },
         function(error) {
-            console.log("error");
-            return false;
+            console.log("error: " + error);
         });
     }
     
@@ -151,6 +148,25 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
 
     }
 
+    function createOrder() {
+        Order.create('{"paymentMethod":"' + $scope.paymentMethod + '"}').$promise.then(function(data) {
+            var order = data;
+            var orderId = order.resource_uri
+            
+            console.log(orderId);
+            $scope.setPaymentMethod('');
+            console.log($scope.cart);
+            var jsonData = $scope.generateItemQuantity($scope.cart, orderId);
+            console.log(jsonData);
+            ItemQuantity.addItems(jsonData);
+            $scope.cart.clear();
+            $scope.totalSum = $scope.calculateTotalSum($scope.cart);
+
+        }, function(error) {
+            console.log(error);
+        });
+    }
+
 
     $scope.submitOrder = function() {
         if ($scope.cart.length == 0)
@@ -161,34 +177,12 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
             alert("Det er ikke valgt noen betalingsmetode!");
         } else 
         {
-            Order.create('{"paymentMethod":"' + $scope.paymentMethod + '"}').$promise.then(function(data) {
-                var order = data;
-                var orderId = order.resource_uri
+            if ($scope.paymentMethod === "crew") {
+                $scope.handleCrewOrder($scope.totalSum);
                 
-                // THERE IS A BUG HERE!
-                if ($scope.paymentMethod === "crew") {
-                    if (!($scope.handleCrewOrder($scope.totalSum))) {
-                        //$scope.setPaymentMethod('');
-                        //$scope.cart.clear();
-                        //$scope.totalSum = $scope.calculateTotalSum($scope.cart);
-                        console.log("herp");
-                        return false
-                    }
-                }
-
-                console.log(orderId);
-                $scope.setPaymentMethod('');
-                console.log($scope.cart);
-                var jsonData = $scope.generateItemQuantity($scope.cart, orderId);
-                console.log(jsonData);
-                ItemQuantity.addItems(jsonData);
-                $scope.cart.clear();
-                $scope.totalSum = $scope.calculateTotalSum($scope.cart);
-                
-            }, function(error) {
-                console.log(error);
-            });
-
+            } else {
+                createOrder();
+            }
         }
     };
 
