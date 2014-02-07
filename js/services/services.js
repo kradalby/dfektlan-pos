@@ -79,6 +79,7 @@ posServices.factory('CrewMember', ['$resource', '$http',
         query: {
             method:'GET', 
             params:{}, 
+            cache: false,
             transformResponse: tastypieDataTransformer($http),
             isArray: true
         },

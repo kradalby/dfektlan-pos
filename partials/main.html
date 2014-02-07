@@ -25,6 +25,11 @@
         <div>
         <button class="btn btn-primary" ng-click="submitOrder()">Legg inn ordre</button>
         </div>
+        <li><br></li>
+        <li id="order-total">
+            <p>Kredit på forrige crew:</p>
+            <p>{{ lastCrewMemberName }}: {{ lastCrewMemberCredit }}</p>
+        </li>  
       </ul>
     </div>
 <!--    
