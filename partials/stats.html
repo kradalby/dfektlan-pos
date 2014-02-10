@@ -57,5 +57,20 @@
         </button>
       </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>Produkt</th>
+                    <th>Antall solgt</th>
+                </tr>
+                <tr ng-repeat="(product, amount) in soldProducts">
+                    <td>{{ product }}</td>
+                    <td>{{ amount }}</td>
+                </tr>
+            </table>
+            <button class="btn btn-primary" ng-click="calculateAmountOfSoldProducts(orders)">Oppdater</button>
+        </div>
+     </div>
   </div>
 </div>
