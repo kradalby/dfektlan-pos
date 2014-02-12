@@ -14,6 +14,13 @@
 
       <ul class="sidebar-nav">
         <li class="sidebar-brand"><a href="#stats">Stats</a></li>
+        <li id="order-item" ng-click="setDateInterval(1)">24 timer</li>
+        <li id="order-item" ng-click="setDateInterval(2)">48 timer</li>
+        <li id="order-item" ng-click="setDateInterval(3)">72 timer</li>
+        <li id="order-item" ng-click="setDateInterval(4)">96 timer</li>
+        <li id="order-item" ng-click="setDateInterval(7)">1 uke</li>
+        <li id="order-item" ng-click="setDateInterval(14)">2 uke</li>
+        <li id="order-item" ng-click="setDateInterval(99*99*99)">Alt</li>
       </ul>
     </div>
 <!--    
@@ -51,11 +58,23 @@
                 <td>Crew</td>
                 <td>{{ totCrew }} kroner</td>
             </tr>
-        </table> 
-        <button class="btn btn-primary" ng-click="calculateTotals(orders)">
-        Oppdater
-        </button>
-      </div>
+        </table>
+        <hr>
+        </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>Produkt</th>
+                    <th>Antall solgt</th>
+                </tr>
+                <tr ng-repeat="(product, amount) in soldProducts">
+                    <td>{{ product }}</td>
+                    <td>{{ amount }}</td>
+                </tr>
+            </table>
+        </div>
+     </div>
   </div>
 </div>
