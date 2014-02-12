@@ -3,50 +3,55 @@
 posControllers.controller('statsController', ['$scope', 'Order',
   function($scope, Order) {
 
-    $scope.orders = Order.query();
+      $scope.orders = Order.query();
 
-    $scope.totCash = 0;
-    $scope.totCard = 0;
-    $scope.totCrew = 0;
+      $scope.totCash = 0;
+      $scope.totCard = 0;
+      $scope.totCrew = 0;
 
-    $scope.calculateTotals = function(orders) {
+      $scope.dateTo = new Date();
+      $scope.dateFrom = new Date().adjustDate(-7);
 
-//        for (var i = 0; i < orders.length; i++) {
-//            if (orders[i].paymentMethod === "kontant") {
-//                for (var j = 0; j < orders[i].items.length; j++) {
-//                    var item = orders[i].items[j];
-//                    cash += item.item.price * item.quantity;
-//                }
-//            } else if (orders[i].paymentMethod === "kort") {
-//                for (var j = 0; j < orders[i].items.length; j++) {
-//                    var item = orders[i].items[j];
-//                    card += item.item.price * item.quantity;
-//                }
-//            } else if (orders[i].paymentMethod === "crew") {
-//                for (var j = 0; j < orders[i].items.length; j++) {
-//                    var item = orders[i].items[j];
-//                    crew += item.item.price * item.quantity;
-//                }
-//            }
-//        }
+      $scope.setDateInterval = function(days) {
+          $scope.dateFrom = new Date().adjustDate(-days);
+          $scope.dateTo = new Date();
 
-        $scope.totCash = calculateEarningsBasedOnPayments(orders, "kontant");
-        $scope.totCard = calculateEarningsBasedOnPayments(orders, "kort");
-        $scope.totCrew = calculateEarningsBasedOnPayments(orders, "crew");
+          //load shit
+          $scope.calculateTotalsBasedOnInterval($scope.dateFrom, $scope.dateTo, $scope.orders);
+          $scope.calculateAmountOfSoldProductsInterval($scope.dateFrom, $scope.dateTo, $scope.orders);
 
+      }
+
+      $scope.calculateTotals = function(orders) {
+
+          $scope.totCash = calculateEarningsBasedOnPayments(orders, "kontant");
+          $scope.totCard = calculateEarningsBasedOnPayments(orders, "kort");
+          $scope.totCrew = calculateEarningsBasedOnPayments(orders, "crew");
+
+      }
+
+    $scope.calculateTotalsBasedOnInterval = function(dateFrom, dateTo, orders) {
+        var intOrders = (getOrderInterval(dateFrom, dateTo, orders))
+        $scope.calculateTotals(intOrders);
     }
 
-    function calculatePaymentEarningsBetween(dateFrom, dateTo, paymentMethod, orders) {
-        var amount = 0;
-        for (var i = 0; i < orders.length; i++) {
-            if (orders[i].paymentMethod === paymentMethod) {
+    $scope.calculateAmountOfSoldProductsInterval = function(dateFrom, dateTo, orders) {
+        var intOrders = (getOrderInterval(dateFrom, dateTo, orders))
+        $scope.calculateAmountOfSoldProducts(intOrders);
+    }
 
+    function getOrderInterval(dateFrom, dateTo, orders) {
+        var intOrders = []
+
+        for (var i = 0; i < orders.length; i++) {
+            var date = new Date(orders[i].date);
+
+            if (dateFrom < date && date < dateTo) {
+                intOrders.push(orders[i]);
             }
         }
-
-        return amount;
-     }
-
+        return intOrders;
+    }
 
     function calculateEarningsBasedOnPayments(orders, payment){
         var amount = 0;
@@ -86,9 +91,7 @@ posControllers.controller('statsController', ['$scope', 'Order',
         }
         $scope.soldProducts = products;
         return products;
-
     }
-
 
 
   }])
