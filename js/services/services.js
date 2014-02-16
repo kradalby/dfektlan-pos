@@ -49,6 +49,7 @@ posServices.factory('Order', ['$resource', '$http',
         },
         query: {
             method:'JSONP', 
+            cache: false,
             params:{callback: 'JSON_CALLBACK', format: 'jsonp'}, 
             transformResponse: tastypieDataTransformer($http),
             isArray: true
