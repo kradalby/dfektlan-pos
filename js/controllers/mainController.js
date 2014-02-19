@@ -116,7 +116,7 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
                     createOrder();
                     
                 } else {
-                    alert('Ikke nok kredit');
+                    alert('Ikke nok gatepoeng');
                 }
             } else {
                 alert('Personen er ikke Crew');
