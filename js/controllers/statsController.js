@@ -8,6 +8,8 @@ posControllers.controller('statsController', ['$scope', 'Order',
       $scope.totCash = 0;
       $scope.totCard = 0;
       $scope.totCrew = 0;
+      $scope.totalSum = 0;
+      $scope.totalSumWithoutCrew = 0;
 
       $scope.dateTo = new Date();
       $scope.dateFrom = new Date().adjustDate(-7);
@@ -27,7 +29,8 @@ posControllers.controller('statsController', ['$scope', 'Order',
           $scope.totCash = calculateEarningsBasedOnPayments(orders, "kontant");
           $scope.totCard = calculateEarningsBasedOnPayments(orders, "kort");
           $scope.totCrew = calculateEarningsBasedOnPayments(orders, "crew");
-
+          $scope.totalSum = $scope.totCard + $scope.totCash + $scope.totCrew;
+          $scope.totalSumWithoutCrew = $scope.totCard + $scope.totCash;
       }
 
     $scope.calculateTotalsBasedOnInterval = function(dateFrom, dateTo, orders) {
