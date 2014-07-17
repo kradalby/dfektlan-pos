@@ -3,6 +3,9 @@
 <div class="row">
 
       <div class="col-sm-8 col-md-8">
+          <select ng-model="eventSelector" name="eventSelector" ng-change="setSelectedEvent()" >
+            <option value="{{ event.shortname }}" ng-repeat="event in lanevents" ng-selected="event.current == true">{{ event.name }}</option>
+          </select>
           <a class="btn btn-primary" href="#main">
               Store
           </a>

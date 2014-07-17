@@ -25,6 +25,19 @@ var tastypieDataTransformSingle = function ($http) {
     ])
 };
 
+posServices.factory('LanEvent', ['$resource', '$http',
+  function($resource, $http){
+    return $resource(APIURL + 'lanevent/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {
+        query: {
+            method:'GET', 
+            params:{}, 
+            transformResponse: tastypieDataTransformer($http),
+            isArray: true
+        }
+    });
+  }
+]);
+
 posServices.factory('Item', ['$resource', '$http',
   function($resource, $http){
     return $resource(APIURL + 'item/?username=' + APIUSER + '&api_key=' + APIKEY + '&limit=0', {}, {

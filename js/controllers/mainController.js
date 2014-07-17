@@ -1,9 +1,19 @@
 'use strict';
 
 
-posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQuantity', 'CrewMember', 'ItemGroup',
-  function($scope, Item, Order, ItemQuantity, CrewMember, ItemGroup) {
+posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQuantity', 'CrewMember', 'ItemGroup', 'LanEvent',
+  function($scope, Item, Order, ItemQuantity, CrewMember, ItemGroup, LanEvent) {
     $scope.items = Item.query();
+
+    $scope.lanevents = LanEvent.query();
+    $scope.selectedEvent = "s14";
+
+    
+
+    $scope.setSelectedEvent = function() {
+        $scope.selectedEvent = $scope.eventSelector;
+        console.log($scope.selectedEvent);
+    }
     
     /* Methods related to the group filter */
     $scope.itemGroups = ItemGroup.query();
@@ -162,7 +172,7 @@ posControllers.controller('mainController', ['$scope', 'Item', 'Order', 'ItemQua
     }
 
     function createOrder() {
-        Order.create('{"paymentMethod":"' + $scope.paymentMethod + '"}').$promise.then(function(data) {
+        Order.create('{"paymentMethod":"' + $scope.paymentMethod + '","event":"' + $scope.selectedEvent + '"}').$promise.then(function(data) {
             var order = data;
             var orderId = order.resource_uri
             
